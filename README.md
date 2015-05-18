@@ -22,7 +22,7 @@ You need three tables in your database(MYSQL);
 
 <code> token( username VARCHAR(64), token VARCHAR(7) ) </code>
 
-<code> users( username VARCHAR(64), password VARCHAR(512) </code>
+<code> users( username VARCHAR(64), password VARCHAR(512) )</code>
 
 
 At last, you need to set up what IP the app will listen on in <code>app.js</code>
