@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 require('./routes.js')(app);
 
-app.listen(port,"192.168.43.14");
+app.listen(port,"127.0.0.1");   //192.168.43.14
  
  
 console.log('OFOR.JS running on port ' + port);
