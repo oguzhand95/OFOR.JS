@@ -17,8 +17,11 @@ You need to setup your Database within <code>app.js</code> like below!
 </code>
 
 You need three tables in your database(MYSQL);
+
 <code> exams( name VARCHAR(64), answer_key VARCHAR(160), teacher_name VARCHAR(64) ) </code>
+
 <code> token( username VARCHAR(64), token VARCHAR(7) ) </code>
+
 <code> users( username VARCHAR(64), password VARCHAR(512) </code>
 
 
