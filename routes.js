@@ -39,7 +39,7 @@ module.exports = function(app)
             if (err)
                 console.log("ERROR: Querying users");
 
-            if(rows)
+            if(rows.length != 0)
             {
                 isExist = true;
                 db_connection.query("INSERT INTO token (username, token) VALUES ('" + name + "'," +"'" + token + "')", function(err, rows, fields)
@@ -50,6 +50,9 @@ module.exports = function(app)
                         console.log("ERROR: Querying users 2");
                 });
             }
+            else
+                res.end("ERROR: No Login Credentials Fits!");
+
             if(isExist)
             {
                 setTimeout(function()
@@ -59,7 +62,7 @@ module.exports = function(app)
                         if(err)
                             console.log("ERROR: Deleting token");
                     });
-                }, 60 * 1000 * 5); // 6 Dakika
+                }, 60 * 1000); // 1 Minutes of Token Validity
             }
         });
 
@@ -70,8 +73,74 @@ module.exports = function(app)
         res.end(token);
     });
 
+    app.get('/exams/check', function(req, res)
+        {
+            var examname = req.query.examname;
 
-    app.get('/exams', function(req, res)
+            db_connection.query("SELECT name FROM exams WHERE name='" + examname + "'" , function (err, rows, fields)
+            {
+                if (err)
+                    console.log("ERROR: Querying token on '/exams/add'");
+
+                if (rows.length != 0)
+                {
+                    console.log("ERROR: There is an exam same name!");
+                    res.end("ERROR");
+                }
+                else {
+                    console.log("LOG: There is no exam with specified name");
+                    res.end("SUCCESS");
+                }
+            });
+
+        }
+    );
+
+
+
+
+    app.get('/exams/add', function(req, res)
+    {
+        var token = req.query.token;
+        var examname = req.query.examname;
+        var answerkey = req.query.answerkey;
+
+        console.log(token);
+
+        db_connection.query("SELECT * FROM token WHERE token='" + token + "'", function (err, rows, fields)
+        {
+            if (err)
+                console.log("ERROR: Querying token on '/exams/add'");
+
+            if (rows.length != 0)
+            {
+                //console.log("SUCCESS");
+                //console.log(rows);
+                //console.log(rows[0]['username']);
+
+                db_connection.query("INSERT INTO exams (name, answer_key, teacher_name) VALUES ('" + examname + "','"+ answerkey + "','" + rows[0]['username']+"')", function (err, rows, fields)
+                {
+                    if(err)
+                        console.log("ERROR: Inserting exam to database failed on '/exams/add'");
+                    else {
+                        console.log("SUCCESS");
+                        res.send("SUCCESS");
+                        res.end();
+                    }
+                });
+
+            }
+            else
+            {
+                console.log("ERROR");
+                res.send("ERROR");
+                res.end();
+            }
+        });
+    });
+
+
+    app.get('/exams/get', function(req, res)
     {
         db_connection.query('SELECT * from exams', function(err, rows, fields)
         {
@@ -84,8 +153,6 @@ module.exports = function(app)
             res.end();
         });
     });
-
-
 
     app.post('/upload', multer(
     {
