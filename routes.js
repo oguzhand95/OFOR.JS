@@ -41,6 +41,7 @@ module.exports = function(app)
 
             if(rows.length != 0)
             {
+
                 isExist = true;
                 db_connection.query("INSERT INTO token (username, token) VALUES ('" + name + "'," +"'" + token + "')", function(err, rows, fields)
                 {
@@ -49,10 +50,12 @@ module.exports = function(app)
                     if(err)
                         console.log("ERROR: Querying users 2");
                 });
+                res.end(token);
             }
-            else
-                res.end("ERROR: No Login Credentials Fits!");
-
+            else {
+                console.log("ERROR: No Login Credentials Fits!");
+                res.end("ERROR");
+            }
             if(isExist)
             {
                 setTimeout(function()
@@ -70,7 +73,6 @@ module.exports = function(app)
 
         console.log("Hash: " + token);
         console.log("Hashed Password: " + hashed_pw);
-        res.end(token);
     });
 
     app.get('/exams/check', function(req, res)
