@@ -180,6 +180,20 @@ module.exports = function(app)
         res.end(img, 'binary');
 
     });
+
+    app.get('/read',function(req,res)
+    {
+        fs.readFile('./data.txt', 'utf8', function (err,data)
+        {
+            if (err)
+            {
+                return console.log(err);
+            }
+            console.log(data);
+
+            res.end(data);
+        });
+    });
 };
 
 
